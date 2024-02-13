@@ -49,6 +49,7 @@ class BookController extends Controller
             'size' => $request->size,
             'category_id' => $request->category_id,
             'page' => $request->page,
+            'rate' => $request->rate,
             'image' => $request->image,
             'user_id' => $user->id,
         ]);
