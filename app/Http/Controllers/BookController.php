@@ -26,7 +26,11 @@ class BookController extends Controller
     }
     public function getBook($bookId)
     {
-        $book = Book::find($bookId);
+        $book = Book::with(['User' => function ($q) {
+            $q->select('id', 'name');
+        }, 'Category' => function ($q) {
+            $q->select('id', 'title');
+        }])->find($bookId);
         if (!$book) {
             return response()->json([
                 "status" => "fail",
@@ -37,6 +41,38 @@ class BookController extends Controller
             "status" => "success",
             'data' => [
                 'book' => $book
+            ]
+        ], 200);
+    }
+    public function getBooksInCategory($categoryId)
+    {
+        $books = Book::where('category_id', $categoryId)->get();
+        if (!$books) {
+            return response()->json([
+                "status" => "fail",
+                "message" => "The requested resource was not found. Please check the provided identifier or ensure the resource exists."
+            ], 404);
+        }
+        return response()->json([
+            "status" => "success",
+            'data' => [
+                'books' => $books
+            ]
+        ], 200);
+    }
+    public function getBooksByAuthor($userId)
+    {
+        $books = Book::where('user_id', $userId)->get();
+        if (!$books) {
+            return response()->json([
+                "status" => "fail",
+                "message" => "The requested resource was not found. Please check the provided identifier or ensure the resource exists."
+            ], 404);
+        }
+        return response()->json([
+            "status" => "success",
+            'data' => [
+                'books' => $books
             ]
         ], 200);
     }
