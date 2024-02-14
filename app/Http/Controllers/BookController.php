@@ -60,9 +60,9 @@ class BookController extends Controller
             ]
         ], 200);
     }
-    public function getBooksByAuthor($userId)
+    public function getBooksByAuthor($authorId)
     {
-        $books = Book::where('user_id', $userId)->get();
+        $books = Book::where('user_id', $authorId)->get();
         if (!$books) {
             return response()->json([
                 "status" => "fail",
