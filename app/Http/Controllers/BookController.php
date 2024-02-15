@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\BookTrait;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
+    use BookTrait;
     public function index()
     {
         $books = Book::all();
@@ -78,6 +80,7 @@ class BookController extends Controller
     }
     public function store(Request $request)
     {
+        $file_name = $this->saveImage($request->photo, 'images/books');
         $user = Auth::user();
         $book = Book::create([
             'title' => $request->title,
@@ -86,7 +89,7 @@ class BookController extends Controller
             'category_id' => $request->category_id,
             'page' => $request->page,
             'rate' => $request->rate,
-            'image' => $request->image,
+            'image' => $file_name,
             'user_id' => $user->id,
         ]);
         if (!$book) {
